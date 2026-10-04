@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ورشة الكاتب الصغير</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@500;700&family=Noto+Naskh+Arabic:wght@400;600;700&display=swap">
+<style>
+body{margin:0}[hidden]{display:none!important}
+/* Layout: a school notebook — task card on top, ruled writing sheet with a red margin, the teacher's red-pen corrections beside it */
+:root{
+  --paper:#f7f9fc; --sheet:#ffffff; --ink:#1d2b4a; --ink-soft:#5b6785; --rule:#cfdcef;
+  --margin:#e0525a; --pen:#c62f3a; --pen-bg:#fdecee; --ok:#2e8a57; --ok-bg:#e6f4ec;
+  --blue:#2457a6; --blue-bg:#e8effa; --amber:#b5730e; --amber-bg:#fdf3e1; --line:#dfe5ef;
+  --display:"Reem Kufi","Noto Naskh Arabic",Tahoma,sans-serif;
+  --body:"Noto Naskh Arabic","Traditional Arabic",Tahoma,serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#11161f; --sheet:#182030; --ink:#e7ecf6; --ink-soft:#a3aec4; --rule:#2a3750;
+  --margin:#d2565e; --pen:#ff8a92; --pen-bg:#3a1f25; --ok:#6fcf97; --ok-bg:#183326;
+  --blue:#8fb4f0; --blue-bg:#1d2a44; --amber:#f0b45a; --amber-bg:#3a2c14; --line:#2a3447; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#11161f; --sheet:#182030; --ink:#e7ecf6; --ink-soft:#a3aec4; --rule:#2a3750;
+  --margin:#d2565e; --pen:#ff8a92; --pen-bg:#3a1f25; --ok:#6fcf97; --ok-bg:#183326;
+  --blue:#8fb4f0; --blue-bg:#1d2a44; --amber:#f0b45a; --amber-bg:#3a2c14; --line:#2a3447; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.8;direction:rtl}
+.wrap{max-width:1100px;margin:0 auto;padding-inline:16px;padding-block:20px 48px;display:flex;flex-direction:column;gap:18px}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:8px 16px}
+h1{font-family:var(--display);font-size:clamp(26px,5vw,36px);margin:0;color:var(--blue);line-height:1.3}
+h1 span{color:var(--pen)}
+.sub{margin:0;color:var(--ink-soft);font-size:15px}
+h2,h3{font-family:var(--display);margin:0;font-weight:700;text-wrap:balance}
+h2{font-size:20px} h3{font-size:17px;color:var(--blue)}
+.picker{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;scrollbar-width:thin}
+.chip{flex:0 0 auto;border:1.5px solid var(--line);background:var(--sheet);color:var(--ink);border-radius:999px;padding:6px 14px;font:600 15px var(--body);cursor:pointer;display:flex;gap:8px;align-items:center}
+.chip b{font-family:var(--display);color:var(--ink-soft);font-variant-numeric:tabular-nums}
+.chip[aria-pressed="true"]{background:var(--blue);border-color:var(--blue);color:var(--sheet)}
+.chip[aria-pressed="true"] b{color:var(--sheet)}
+.chip .dot{width:8px;height:8px;border-radius:50%;background:var(--ok)}
+button:focus-visible,textarea:focus-visible,input:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.task{background:var(--sheet);border:1px solid var(--line);border-radius:14px;padding:18px 20px;display:grid;grid-template-columns:1fr 300px;gap:18px}
+.task>*{min-width:0}
+.meta{display:flex;flex-wrap:wrap;gap:6px 10px;margin-bottom:6px;font-size:14px}
+.tag{background:var(--blue-bg);color:var(--blue);border-radius:6px;padding:1px 10px}
+.tag.alt{background:var(--amber-bg);color:var(--amber)}
+.mission{margin:8px 0 0;font-size:17.5px}
+.remind{border-inline-start:3px dashed var(--line);padding-inline-start:16px}
+.remind ul{margin:6px 0 0;padding-inline-start:18px;font-size:15.5px;line-height:1.7}
+.remind li::marker{color:var(--pen)}
+.main{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:18px;align-items:start}
+.sheet{background:var(--sheet);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.sheet-head{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--line)}
+.counts{display:flex;gap:14px;font-size:14px;color:var(--ink-soft);font-variant-numeric:tabular-nums}
+.counts strong{color:var(--ink)}
+.counts .good strong{color:var(--ok)}
+textarea{display:block;width:100%;min-height:440px;resize:vertical;border:0;background-color:var(--sheet);color:var(--ink);
+  font:400 20px/40px var(--body);padding:4px 46px 20px 18px;
+  background-image:linear-gradient(to left,transparent 34px,var(--margin) 34px,var(--margin) 36px,transparent 36px),
+                   repeating-linear-gradient(to bottom,transparent 0 39px,var(--rule) 39px 40px);
+  background-attachment:local;background-position:0 4px}
+textarea::placeholder{color:var(--ink-soft);opacity:.7}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;padding:12px 16px;border-top:1px solid var(--line)}
+.btn{border:0;border-radius:10px;padding:10px 18px;font:700 16px var(--body);cursor:pointer;display:inline-flex;gap:8px;align-items:center}
+.btn.primary{background:var(--pen);color:#fff}
+.btn.primary:disabled{opacity:.6;cursor:progress}
+.btn.ghost{background:transparent;border:1.5px solid var(--line);color:var(--ink)}
+.side{display:flex;flex-direction:column;gap:14px}
+.card{background:var(--sheet);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.quick ul{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-direction:column;gap:6px;font-size:15px}
+.quick li{display:flex;gap:8px;align-items:flex-start;line-height:1.6}
+.quick .ico{flex:0 0 22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:700}
+.ico.ok{background:var(--ok-bg);color:var(--ok)} .ico.warn{background:var(--amber-bg);color:var(--amber)}
+.fix{border:0;background:var(--amber-bg);color:var(--amber);border-radius:6px;font:600 13px var(--body);padding:0 8px;cursor:pointer;margin-inline-start:4px}
+.review ul{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-direction:column;gap:4px}
+.review label{display:flex;gap:10px;align-items:flex-start;font-size:15.5px;cursor:pointer;line-height:1.6}
+.review input{width:20px;height:20px;margin-top:4px;accent-color:var(--ok);flex:0 0 auto}
+.status{font-size:15px;color:var(--ink-soft);display:flex;gap:10px;align-items:center}
+.spin{width:18px;height:18px;border:3px solid var(--pen-bg);border-top-color:var(--pen);border-radius:50%;animation:s 1s linear infinite}
+@keyframes s{to{transform:rotate(-360deg)}}
+@media (prefers-reduced-motion:reduce){.spin{animation:none}}
+.result{display:flex;flex-direction:column;gap:14px}
+.cheer{background:var(--ok-bg);border-radius:12px;padding:12px 16px;display:flex;gap:14px;align-items:center}
+.stars{font-size:26px;letter-spacing:2px;color:var(--amber);white-space:nowrap}
+.marked{font:400 19px/2.1 var(--body);white-space:pre-wrap;overflow-wrap:anywhere}
+mark{background:var(--pen-bg);color:var(--pen);text-decoration:underline wavy var(--pen) 1.5px;text-underline-offset:6px;border-radius:3px;padding:0 2px}
+mark sup{font:700 11px var(--display);color:var(--sheet);background:var(--pen);border-radius:999px;padding:0 5px;margin-inline-start:2px}
+.errs{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.err{border:1px solid var(--line);border-radius:12px;padding:10px 14px;display:grid;gap:4px}
+.err .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.num{font:700 13px var(--display);background:var(--pen);color:#fff;border-radius:999px;min-width:24px;text-align:center}
+.wrong{color:var(--pen);text-decoration:line-through;font-weight:600}
+.right{color:var(--ok);font-weight:700}
+.kind{font-size:13px;border-radius:6px;padding:0 8px;background:var(--blue-bg);color:var(--blue)}
+.err p{margin:0;font-size:15px;color:var(--ink-soft);line-height:1.7}
+.crit{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.crit li{display:flex;gap:10px;align-items:flex-start;font-size:15.5px;line-height:1.6}
+.crit small{display:block;color:var(--ink-soft);font-size:14px}
+.corr{white-space:pre-wrap;font:400 18px/2 var(--body);background:var(--blue-bg);border-radius:10px;padding:12px 14px;margin:8px 0 0}
+.note{font-size:14px;color:var(--ink-soft);margin:0}
+.empty{color:var(--ink-soft);font-size:15px;margin:6px 0 0}
+@media (max-width:820px){.task{grid-template-columns:1fr}.remind{border-inline-start:0;border-top:2px dashed var(--line);padding:12px 0 0}.main{grid-template-columns:1fr}textarea{min-height:360px}}
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+  <header>
+    <div>
+      <h1>ورشة <span>الكاتب الصغير</span></h1>
+      <p class="sub">المستوى السادس · أكتب نصّي، ثم أطلب التصحيح وأتعلّم من أخطائي</p>
+    </div>
+  </header>
+
+  <nav class="picker" id="picker" aria-label="اختر الإنتاج الكتابي"></nav>
+
+  <section class="task" aria-live="polite">
+    <div>
+      <div class="meta"><span class="tag" id="tSessions"></span><span class="tag alt" id="tType"></span><span class="tag" id="tLines"></span></div>
+      <h2 id="tTitle"></h2>
+      <p class="mission" id="tTask"></p>
+    </div>
+    <div class="remind">
+      <h3>قبل أن أكتب، أتذكّر</h3>
+      <ul id="tBefore"></ul>
+    </div>
+  </section>
+
+  <div class="main">
+    <div class="sheet">
+      <div class="sheet-head">
+        <h3>ورقتي</h3>
+        <div class="counts">
+          <span id="cWords">الكلمات: <strong>0</strong></span>
+          <span id="cSent">الجمل: <strong>0</strong></span>
+          <span id="cLines">الأسطر ≈ <strong>0</strong></span>
+        </div>
+      </div>
+      <label for="text" class="note" style="position:absolute;width:1px;height:1px;overflow:hidden">نصّي</label>
+      <textarea id="text" spellcheck="true" lang="ar" placeholder="أكتب نصّك هنا… ابدأ بجملة تشدّ القارئ."></textarea>
+      <div class="toolbar">
+        <button class="btn primary" id="check">✎ صحّح نصّي</button>
+                <button class="btn ghost" id="clear">ورقة جديدة</button>
+        <span class="status" id="status" hidden></span>
+      </div>
+    </div>
+
+    <aside class="side">
+      <div class="card quick">
+        <h3>المدقّق السريع</h3>
+        <ul id="quick"></ul>
+      </div>
+      <div class="card review">
+        <h3>أراجع كتابتي</h3>
+        <ul id="tReview"></ul>
+      </div>
+    </aside>
+  </div>
+
+  <section class="card result" id="result" hidden>
+    <div class="cheer"><span class="stars" id="stars"></span><p id="cheer" style="margin:0"></p></div>
+    <div>
+      <h3>نصّي مع علامات القلم الأحمر</h3>
+      <p class="marked" id="marked"></p>
+    </div>
+    <div>
+      <h3>أخطائي وكيف أصحّحها</h3>
+      <ul class="errs" id="errs"></ul>
+    </div>
+    <div>
+      <h3>أتحقّق من معايير المهمة بنفسي</h3>
+      <p class="note">ارجع إلى جدول «أراجع كتابتي» وضع علامة أمام كل معيار حقّقته.</p><ul class="crit" id="crit" hidden></ul>
+    </div>
+    <div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between">
+        <h3>النص بعد التصحيح</h3>
+        <span style="display:flex;gap:8px"><button class="btn ghost" id="copy">نسخ</button><button class="btn ghost" id="useCorr">ضعه في ورقتي</button></span>
+      </div>
+      <p class="corr" id="corr"></p>
+      <p class="note">التصحيح الآلي بواسطة LanguageTool، وقد يفوته بعض الأخطاء أو يقترح ما لا يناسب. نصيحة: لا تنسخ التصحيح مباشرة. صحّح أخطاءك بنفسك في ورقتك، ثم اضغط «صحّح نصّي» مرة أخرى.</p>
+    </div>
+  </section>
+</div>
+
+<script>
+const TASKS = [{"title":"حذاء الطنبوري","sessions":"الحصتان 1 و 2","type":"سرد على لسان شخصية","lines":"حوالي 10 أسطر","task":"تخيَّلْ/تخيَّلي أنَّ حذاء الطنبوري أصبح قادرًا على الكلام. أعِدْ/أعيدي سرد أهمِّ ما جرى له على لسانه، وعبِّرْ/عبِّري عن مشاعره ممّا حدث، ثمَّ بيِّنْ/بيِّني موقفه من صاحبه.","before":["أستعمل ضمير المتكلّم(ة).","أختار أهمَّ الأحداث وأرتّبها، وأستعمل روابط زمنية مناسبة.","أعبّر عن مشاعر الحذاء وأفكاره.","أختم بموقف واضح من صاحبه."],"review":["كتبتُ بضمير المتكلّم(ة).","رتّبتُ الأحداث واستعملتُ روابط زمنية.","عبّرتُ عن مشاعر الحذاء وأفكاره.","بيّنتُ موقف الحذاء من صاحبه."]},{"title":"الذئب وتشانغ دونغ قو","sessions":"الحصتان 3 و 4","type":"نص حِكَمي (عرض قضية وإصدار حكم)","lines":"من 10 إلى 12 سطرًا","task":"بعد أن تابعتَ/تابعتِ نزاع دونغ قو مع الذئب، واستمعتَ/استمعتِ إلى مواقف الشهود وحيلة الفلّاح؛ اكتبْ/اكتبي نصًّا (من 10 إلى 12 سطرًا) تعرض فيه القضية بإيجاز، وتحلّل مواقف الشخصيات، وتُصدر حكمًا معلَّلًا على سلوك دونغ قو والذئب، ثمَّ تختم بحكمة تميّز بين الرحمة الواعية والسذاجة المهلكة.","before":["أعرض القضية بإيجاز (إنقاذ دونغ قو للذئب ثمَّ انقلابه عليه والاحتكام).","أحلّل المواقف: جحود الذئب، خيبة الشهود، ذكاء الفلّاح.","أُصدر حكمًا معلَّلًا على سلوك كلٍّ من دونغ قو والذئب.","أستعمل روابط التعليل والمقارنة: بينما، لأنَّ، في المقابل، ممّا يدلّ…","أختم بحكمة بالغة تميّز بين الرحمة المقرونة بالبصيرة والسذاجة التي تقود إلى الهلاك."],"review":["عرضتُ القضية بإيجاز وتسلسل منطقي.","حلّلتُ مواقف الشخصيات (الذئب، الشهود، الفلّاح).","أبديتُ حكمي المعلَّل على سلوك دونغ قو والذئب.","ختمتُ بحكمة تميّز بين الرحمة الواعية والسذاجة.","التزمتُ بعدد الأسطر (10–12) وعلامات الترقيم وسلامة اللغة."]},{"title":"المقامة الحِرزية","sessions":"الحصتان 5 و 6","type":"نص سردي (حكاية بحيلة ومفارقة)","lines":"من 10 إلى 12 سطرًا","task":"تخيَّلْ/تخيَّلي موقفًا وقعت فيه مجموعة من الناس في مشكلة أو ارتباك، فظهر شخص استغلَّ الموقف بحيلة ذكية، ثمَّ انكشفت الحقيقة في النهاية. اكتبْ/اكتبي نصًّا (من 10 إلى 12 سطرًا) ترتّب فيه الأحداث، وتوظّف السرد والوصف والحوار، وتستعمل بعض التوازي أو المقابلة، وتُحدث مفارقة، وتختم بنهاية تكشف الحيلة.","before":["أقدّم الموقف والشخصيات.","أتدرّج في الأحداث وأُنمّي المشكلة.","أبتكر حيلة مشوّقة تحرّك الأحداث.","أوظّف السرد والوصف والحوار، مع بعض التوازي أو المقابلة.","أختم النص بنهاية تكشف الحيلة وتُحدث مفارقة."],"review":["بنيتُ موقفًا واضحًا ومشكلة محدَّدة.","ابتكرتُ حيلة مناسبة ومشوّقة.","رتّبتُ الأحداث ووظّفتُ السرد والوصف والحوار.","استعملتُ توازيًا أو مقابلة.","ختمتُ بنهاية تكشف الحيلة وتُحدث مفارقة."]},{"title":"النحلة العاملة","sessions":"الحصتان 7 و 8","type":"نص علمي تفسيري","lines":"من 8 إلى 10 أسطر","task":"سألك زميلك: «كيف تستطيع آلاف النحلات أن تعمل داخل الخلية في نظام دقيق، إذا لم تكن هناك نحلة تُصدر الأوامر؟». اكتبْ/اكتبي نصًّا علميًّا قصيرًا (من 8 إلى 10 أسطر)، مستفيدًا/مستفيدةً من معلومات النص، تفسّر فيه ذلك.","before":["أقدّم الفكرة التي سأفسّرها.","أبيّن كيف تتوزّع الأدوار بين النحلات.","أشرح أهمية التواصل والتعاون داخل الخلية.","أدعم تفسيري بمعلومات وأمثلة من النص.","أختم بخلاصة تبيّن كيف ينشأ النظام في الخلية."],"review":["فسّرتُ كيف ينشأ نظام الخلية الدقيق.","بيّنتُ كيف تتكامل الأدوار بين النحلات.","أوضحتُ أهمية التواصل والتعاون داخل الخلية.","دعمتُ تفسيري بمعلومات من النص."]},{"title":"رحلة قطرة ماء","sessions":"الحصتان 9 و 10","type":"نص علمي (شرح ظاهرة)","lines":"من 8 إلى 10 أسطر","task":"قال زميلك: «أفهم أنَّ الماء ينتقل من مكان إلى آخر، لكنّي لا أفهم كيف تتكوّن دورته». اكتبْ/اكتبي نصًّا علميًّا (من 8 إلى 10 أسطر) تشرح فيه كيف ينتقل الماء بين البحر والهواء واليابسة والكائنات الحيّة.","before":["أقدّم الظاهرة التي سأشرحها.","أرتّب أهمَّ مراحل دورة الماء.","أربط بين الأسباب والنتائج.","أستعمل المصطلحات العلمية المناسبة.","أختم بخلاصة تبيّن استمرار دورة الماء."],"review":["رتّبتُ المراحل بوضوح.","استعملتُ مصطلحات علمية دقيقة.","ربطتُ بين السبب والنتيجة.","بيّنتُ تنوّع مسارات الماء.","كتبتُ خلاصة واضحة."]},{"title":"لغز الأخطبوط","sessions":"الحصتان 11 و 12","type":"مقال علمي تفسيري","lines":"من 8 إلى 10 أسطر","task":"بمناسبة «الأسبوع العلمي البيئي» بمدرستك، كُلِّفتَ/كُلِّفتِ بإعداد مقال علمي تفسيري (من 8 إلى 10 أسطر) لمجلة المدرسة الحائطية تحت عنوان: «عبقرية الأخطبوط: كائن بحري يسبق الخيال». فسِّرْ/فسِّري مظاهر ذكائه ودقّة تكيّفه، ثمَّ اختِمْ/اختِمي برسالة توعوية تُبرز أهمية حماية الأحياء البحرية من الصيد الجائر والتلوّث.","before":["أحدّد عنوانًا ملفتًا ومقدّمة تمهّد للموضوع.","أعتمد أسلوب التفسير العلمي المدعَّم بالأدلّة من النص.","أوظّف معطيات التشريح والذكاء ووسائل الدفاع.","أختم بدعوة توعوية واضحة لحماية البيئة البحرية."],"review":["كتبتُ مقالًا علميًّا متماسك البنية (مقدّمة، عرض، خاتمة).","وظّفتُ معجمًا علميًّا دقيقًا مستمدًّا من النص.","فسّرتُ مظاهر الذكاء والتكيّف بأمثلة واضحة.","صغتُ رسالة توعوية بيئية هادفة."]},{"title":"قرية الملح في قلب الصحراء","sessions":"الحصتان 13 و 14","type":"نص تفسيري","lines":"من 8 إلى 10 أسطر","task":"«كانت تغازى قرية قاحلة في الصحراء، شحيحة الماء والغذاء، ومع ذلك أصبحت محطة تجارية مهمّة». اكتبْ/اكتبي نصًّا تفسيريًّا (من 8 إلى 10 أسطر) تبيّن فيه كيف حوَّلت هذه البيئة القاسية إلى مكان تلتقي فيه القوافل وتتبادل السلع.","before":["أقدّم تغازى وطبيعة بيئتها.","أبيّن أهمية الملح فيها.","أشرح دور القوافل في جلب المؤن ونقل الملح.","أربط بين الموقع والمورد وازدهار التجارة.","أختم بخلاصة تفسّر أهمية تغازى."],"review":["بيّنتُ خصوصية مكان تغازى.","وظّفتُ معلومات من النص.","ربطتُ بين الملح والقوافل والتجارة.","استعملتُ علاقات السبب والنتيجة.","ختمتُ بخلاصة واضحة."]},{"title":"كيف قاس العلماء محيط الأرض؟","sessions":"الحصتان 15 و 16","type":"تقرير مقارن","lines":"من 8 إلى 10 أسطر","task":"سعى إراتوستينس وعلماء المأمون والبيروني إلى حلِّ المشكلة العلمية نفسها: قياس محيط الأرض، لكنَّ كلَّ طرف سلك طريقة مختلفة. اكتبْ/اكتبي تقريرًا (من 8 إلى 10 أسطر) لنادي العلوم بمدرستك، تقارن فيه بين هذه الطرق من حيث: (الوسائل المستعملة، الجهد المبذول، الفكرة الذكية)، مبيّنًا كيف أسهم تطوّر القياس والرياضيات في تقليل الجهود وبلوغ نتائج أدقّ.","before":["أحدّد عنوانًا مناسبًا للتقرير ومقدّمة تعرّف بالمشكلة.","أعتمد أدوات المقارنة: بينما، في حين، على خلاف…","أقارن بين الطرق الثلاث حسب المعايير المطلوبة.","أختم باستنتاج يبيّن تطوّر الفكر العلمي."],"review":["صغتُ تقريرًا مقارنًا منظَّمًا (مقدّمة، عرض المقارنة، خلاصة).","وظّفتُ أدوات وروابط المقارنة بدقّة.","أبرزتُ الفرق بين الجهد البدني والحلِّ الرياضي الذكي.","ختمتُ برأي حول تطوّر العلم عبر العصور.","راعيتُ علامات الترقيم وسلامة اللغة."]},{"title":"الإدريسي: حين اجتمع العالم على خريطة","sessions":"الحصتان 17 و 18","type":"سيرة تعريفية","lines":"من 8 إلى 10 أسطر","task":"بمناسبة «الأسبوع الثقافي للتواصل الحضاري» بمدرستك، طُلب منك إنجاز سيرة تعريفية موجزة (من 8 إلى 10 أسطر) لمجلة المدرسة عن العالم المغربي الشريف الإدريسي. عرِّفْ/عرِّفي بأهمِّ محطات رحلته ومساره، مع إبراز ما يميّز طريقته في جمع المعلومات والتثبّت منها، وبيان أهمية خريطته وكرته الفضية، ثمَّ اختِمْ/اختِمي بكلمة اعتزاز بإسهامه في الحضارة الإنسانية.","before":["أقدّم العالم وأهمَّ محطات مساره.","أذكر أبرز رحلاته ومعارفه.","أبيّن طريقته في جمع المعلومات والتثبّت منها.","أُبرز أهمية خريطته وكرته الفضية.","أختم بكلمة اعتزاز بإسهامه الحضاري."],"review":["رتّبتُ معلومات السيرة بوضوح.","اخترتُ أهمَّ المحطات دون إطناب.","بيّنتُ ما يميّز منهج الإدريسي.","أبرزتُ قيمة إنجازاته الجغرافية.","ختمتُ بعبارة مناسبة ورسالة معبّرة."]},{"title":"نبض الأرض","sessions":"الحصتان 19 و 20","type":"مداخلة إذاعية توعوية","lines":"من 8 إلى 10 أسطر","task":"بمناسبة «اليوم المدرسي للوقاية من المخاطر الطبيعية»، كُلِّفتَ/كُلِّفتِ بإعداد مداخلة إذاعية قصيرة (من 8 إلى 10 أسطر) للإذاعة المدرسية بعنوان: «البركان… هل هو نائم أم هادئ؟». فسِّرْ/فسِّري فيها ما يجري في أعماق البركان، وكيف يرصد العلماء نشاطه، ثمَّ ادعُ/ادعي زملاءك إلى أهمية الاحتياط والاستعداد دون تهويل.","before":["أبدأ افتتاحيتي بعبارة مشوّقة تشدّ انتباه المستمعين.","أفسّر الظاهرة الباطنية: صعود الصهارة، تراكم الضغط.","أذكر علامات الإنذار: الاهتزازات، انتفاخ السفوح، الغازات.","أبيّن أهمية الوقاية: خرائط الإخلاء، تتبّع تعليمات العلماء.","أختم برسالة توعوية متّزنة تبثّ الطمأنينة والوعي."],"review":["كتبتُ مداخلة إذاعية توعوية بأسلوب علمي مشوّق.","فسّرتُ ما يجري في أعماق الجبل بربط الأسباب بالنتائج.","وظّفتُ معطيات دقيقة من النص (الرصد، علامات الخطر).","قدّمتُ إرشادات الاحتياط بعبارات توعوية دون تهويل.","راعيتُ ترابط الجمل وعلامات الترقيم وسلامة اللغة."]},{"title":"المصنع الأخضر","sessions":"الحصتان 21 و 22","type":"مقال تفسيري توعوي","lines":"من 8 إلى 10 أسطر","task":"بمناسبة احتفال النادي البيئي بمدرستك بـ«اليوم العالمي للغابات»، اكتبْ/اكتبي مقالًا تفسيريًّا توعويًّا (من 8 إلى 10 أسطر) تحت عنوان: «الرئة التي لا تتوقّف»، تشرح فيه كيف تستثمر الأوراق الخضراء طاقة ضوء الشمس في صنع الغذاء وإطلاق الأكسجين، وتبيّن أهمية الغطاء النباتي في حياة الكائنات، محذّرًا/محذّرةً من أثر قطع الأشجار وتقليص المساحات الخضراء.","before":["أبدأ بمقدّمة تفسيرية جذّابة تُبرز أهمية النبات في الحياة.","أوظّف مصطلحات علمية دقيقة: البناء الضوئي، اليخضور…","أستعمل روابط التفسير والسببية: لأنَّ، نتيجةً لذلك…","أوضّح الخطر البيئي الناتج عن قطع الأشجار وتقليص المساحات الخضراء.","أختم بدعوة واضحة إلى حماية الأشجار وغرسها."],"review":["كتبتُ مقالًا تفسيريًّا توعويًّا منظَّمًا.","فسّرتُ دور الورقة في صنع الغذاء وإطلاق الأكسجين.","ربطتُ بين سلامة الغطاء النباتي وحياة الكائنات الحيّة.","وظّفتُ روابط التفسير والسببية بشكل سليم.","راعيتُ ترابط الأفكار وعلامات الترقيم وسلامة اللغة."]},{"title":"كيف يرى الروبوت طريقه؟","sessions":"الحصتان 23 و 24","type":"نص حِجاجي","lines":"من 10 إلى 12 سطرًا","task":"قال أحد زملائك خلال نقاش في الفصل حول ذكاء الروبوتات: «إذا كان الروبوت يستشعر تمامًا ويفكّر ويختار ويصحّح أخطاءه، فهو مثل الإنسان». اكتبْ/اكتبي نصًّا حِجاجيًّا (من 10 إلى 12 سطرًا) تناقش فيه هذا الرأي، لتُقنع زميلك بالفرق بين قرارات البرنامج الآلي وفهم العقل البشري، معلِّلًا/معلِّلةً موقفك بأدلّة مناسبة.","before":["أقدّم القضية التي سأناقشها.","أبيّن قدرة الروبوت على الاستشعار والاختيار والتصحيح.","أميّز بين اتخاذ القرار والفهم.","أستدلّ بمعطيات من النص.","أختم بموقف واضح ومعلَّل."],"review":["قدّمتُ القضية وناقشتُها بوضوح.","قدّمتُ حججًا وأدلّة مناسبة.","ميّزتُ بين سلوك الروبوت وفهم الإنسان.","عبّرتُ بوضوح عن موقفي وعلّلتُه.","راجعتُ تماسك أفكاري وسلامة لغتي."]}];
+const $ = s => document.getElementById(s);
+let cur = 0, sample = null, ctl = null;
+const store = {get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+
+function renderPicker(){
+  $('picker').innerHTML='';
+  TASKS.forEach((t,i)=>{
+    const b=document.createElement('button');b.className='chip';b.type='button';
+    b.setAttribute('aria-pressed',i===cur);
+    b.innerHTML=`<b>${i+1}</b><span></span>`+((store.get('kw-'+i)||'').trim()?'<i class="dot" title="فيه مسودة"></i>':'');
+    b.querySelector('span').textContent=t.title;
+    b.onclick=()=>{save();cur=i;store.set('kw-cur',i);load()};
+    $('picker').append(b);
+  });
+}
+function load(){
+  const t=TASKS[cur];
+  $('tSessions').textContent=t.sessions;$('tType').textContent=t.type;$('tLines').textContent=t.lines;
+  $('tTitle').textContent=`${cur+1}. ${t.title}`;$('tTask').textContent=t.task;
+  $('tBefore').innerHTML='';t.before.forEach(s=>{const li=document.createElement('li');li.textContent=s;$('tBefore').append(li)});
+  $('tReview').innerHTML='';const done=JSON.parse(store.get('kr-'+cur)||'[]');
+  t.review.forEach((s,j)=>{const li=document.createElement('li');li.innerHTML=`<label><input type="checkbox" id="rv${j}"><span></span></label>`;
+    li.querySelector('span').textContent=s;const cb=li.querySelector('input');cb.checked=done.includes(j);
+    cb.onchange=()=>{const d=[...$('tReview').querySelectorAll('input')].map((c,k)=>c.checked?k:-1).filter(k=>k>=0);store.set('kr-'+cur,JSON.stringify(d))};
+    $('tReview').append(li)});
+  $('text').value=store.get('kw-'+cur)||'';
+  $('result').hidden=true;renderPicker();update();
+}
+function save(){store.set('kw-'+cur,$('text').value)}
+
+// ---------- counts + quick local checks ----------
+const COMMON=[
+  [/(^|\s)انا(?=\s|$|[،.؟!])/g,'أنا'],[/(^|\s)الى(?=\s|$)/g,'إلى'],[/(^|\s)هاذا/g,'هذا'],[/(^|\s)هاذه/g,'هذه'],[/(^|\s)هاذي/g,'هذه'],
+  [/(^|\s)لاكن/g,'لكن'],[/(^|\s)ذالك/g,'ذلك'],[/(^|\s)هاكذا/g,'هكذا'],[/(^|\s)إنشاء الله/g,'إن شاء الله'],[/(^|\s)انشاء الله/g,'إن شاء الله'],
+  [/(^|\s)مسؤل/g,'مسؤول'],[/(^|\s)شيئ(?=\s|$|[،.])/g,'شيء'],[/(^|\s)اذا(?=\s)/g,'إذا'],[/(^|\s)اين(?=\s|$|[؟])/g,'أين'],[/(^|\s)امام(?=\s)/g,'أمام'],
+  [/(^|\s)ايضا(?=\s|$|[،.])/g,'أيضًا'],[/(^|\s)اول(?=\s)/g,'أوّل'],[/(^|\s)اخي(?=\s|$)/g,'أخي'],[/(^|\s)امي(?=\s|$)/g,'أمّي'],[/(^|\s)ابي(?=\s|$)/g,'أبي'],
+];
+function quick(){
+  const v=$('text').value, out=[];
+  if(!v.trim()){$('quick').innerHTML='<li class="empty">ابدأ الكتابة، وسأنبّهك هنا إلى الأخطاء الشائعة.</li>';return}
+  const hits=[];COMMON.forEach(([re,fix])=>{const m=v.match(re);if(m){const w=m[0].trim();hits.push([w,fix])}});
+  hits.forEach(([w,f])=>out.push(['warn',`اكتب «${f}» بدل «${w}»`,()=>replaceAll(w,f)]));
+  if(/ +[،.؟!:؛]/.test(v))out.push(['warn','لا أترك فراغًا قبل علامة الترقيم.',()=>{$('text').value=$('text').value.replace(/ +([،.؟!:؛])/g,'$1');update()}]);
+  if(/[،.؟!:؛](?=[^\s\d.،؟!»"\n])/.test(v))out.push(['warn','أترك فراغًا بعد علامة الترقيم.',()=>{$('text').value=$('text').value.replace(/([،.؟!:؛])(?=[^\s\d.،؟!»"\n])/g,'$1 ');update()}]);
+  if(/ {2,}/.test(v))out.push(['warn','يوجد فراغان متتاليان.',()=>{$('text').value=$('text').value.replace(/ {2,}/g,' ');update()}]);
+  if(/,/.test(v))out.push(['warn','أستعمل الفاصلة العربية «،» بدل «,».',()=>{$('text').value=$('text').value.replace(/,/g,'،');update()}]);
+  if(/\?/.test(v))out.push(['warn','أستعمل علامة الاستفهام العربية «؟».',()=>{$('text').value=$('text').value.replace(/\?/g,'؟');update()}]);
+  if(!/[.؟!]\s*$/.test(v.trim()))out.push(['warn','أختم نصّي بنقطة.',null]);
+  const words=v.trim().split(/\s+/);const long=v.split(/[.؟!]/).map(s=>s.trim().split(/\s+/).filter(Boolean).length).filter(n=>n>35);
+  if(long.length)out.push(['warn','لديّ جملة طويلة جدًّا؛ أقسّمها بنقطة أو فاصلة.',null]);
+  const freq={};words.forEach(w=>{w=w.replace(/[،.؟!:؛«»"]/g,'');if(w.length>3)freq[w]=(freq[w]||0)+1});
+  const rep=Object.entries(freq).filter(([w,n])=>n>=4&&!['الذي','التي','عندما'].includes(w)).map(([w])=>w);
+  if(rep.length)out.push(['warn',`كرّرتُ كلمة «${rep[0]}» كثيرًا؛ أبحث عن مرادف.`,null]);
+  if(!out.length)out.push(['ok','لم أجد أخطاء شائعة. اطلب التصحيح الكامل للتأكد.',null]);
+  $('quick').innerHTML='';
+  out.forEach(([k,msg,fn])=>{const li=document.createElement('li');li.innerHTML=`<span class="ico ${k}">${k==='ok'?'✓':'!'}</span><span></span>`;
+    li.lastChild.textContent=msg;if(fn){const b=document.createElement('button');b.className='fix';b.type='button';b.textContent='أصلح';b.onclick=fn;li.lastChild.append(b)}
+    $('quick').append(li)});
+}
+function replaceAll(w,f){const re=new RegExp('(^|\\s)'+w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'(?=\\s|$|[،.؟!:؛])','g');$('text').value=$('text').value.replace(re,'$1'+f);update()}
+function update(){
+  const v=$('text').value,w=v.trim()?v.trim().split(/\s+/).length:0,s=(v.match(/[.؟!]+/g)||[]).length,l=Math.round(w/11);
+  const [lo,hi]=TASKS[cur].lines.includes('10 إلى 12')?[10,12]:TASKS[cur].lines.includes('8 إلى 10')?[8,10]:[9,11];
+  $('cWords').innerHTML=`الكلمات: <strong>${w}</strong>`;$('cSent').innerHTML=`الجمل: <strong>${s}</strong>`;
+  $('cLines').innerHTML=`الأسطر ≈ <strong>${l}</strong> / ${lo}–${hi}`;$('cLines').className=l>=lo&&l<=hi+1?'good':'';
+  quick();save();
+}
+let tmr;$('text').addEventListener('input',()=>{clearTimeout(tmr);tmr=setTimeout(update,300)});
+
+// ---------- AI correction ----------
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const MSG={sampling_disabled:'التصحيح الآلي غير متاح لهذا الحساب.',rate_limited:'طلبات كثيرة في وقت قصير. انتظر قليلًا ثم أعد المحاولة.',invalid_json:'لم يصل التصحيح كاملًا. اضغط «صحّح نصّي» مرة أخرى.',refused:'تعذّر تصحيح هذا النص. راجع محتواه ثم أعد المحاولة.',session_expired:'يجب تسجيل الدخول من جديد.'};
+function status(html){$('status').hidden=!html;$('status').innerHTML=html||''}
+
+const TYPES={TYPOS:'إملائي',GRAMMAR:'نحوي',PUNCTUATION:'ترقيم',TYPOGRAPHY:'ترقيم',CASING:'إملائي',STYLE:'أسلوب',REDUNDANCY:'تكرار',CONFUSED_WORDS:'لبس في الكلمات',MISC:'متنوع'};
+async function check(){
+  const v=$('text').value;
+  if(v.trim().split(/\s+/).length<15){status('اكتب ثلاث جمل على الأقل قبل طلب التصحيح.');return}
+  $('check').disabled=true;status('<span class="spin"></span> جارٍ تصحيح نصّك…');
+  try{
+    const body=new URLSearchParams({text:v,language:'ar'});
+    const res=await fetch('https://api.languagetool.org/v2/check',{method:'POST',body});
+    if(res.status===429)throw{code:'rate_limited'};
+    if(!res.ok)throw{code:'upstream_error'};
+    const data=await res.json();showLT(v,data.matches||[]);status('');
+  }catch(e){status(MSG[e&&e.code]||'تعذّر الاتصال بخدمة التصحيح. تحقّق من الإنترنت ثم أعد المحاولة.')}
+  finally{$('check').disabled=false}
+}
+function showLT(orig,m){
+  m=m.filter(x=>x.length>0).sort((a,b)=>a.offset-b.offset);
+  let html='',pos=0;const errs=[];
+  m.forEach(x=>{if(x.offset<pos)return;errs.push(x);const i=errs.length;
+    html+=esc(orig.slice(pos,x.offset))+'<mark>'+esc(orig.substr(x.offset,x.length))+'<sup>'+i+'</sup></mark>';pos=x.offset+x.length});
+  html+=esc(orig.slice(pos));$('marked').innerHTML=html;
+  $('errs').innerHTML=errs.length?'':'<li class="empty">أحسنت! لم يجد المصحّح أخطاء في نصّك.</li>';
+  errs.forEach((x,i)=>{const li=document.createElement('li');li.className='err';
+    li.innerHTML='<div class="row"><span class="num">'+(i+1)+'</span><span class="wrong"></span><span>←</span><span class="right"></span><span class="kind"></span></div><p></p>';
+    li.querySelector('.wrong').textContent=orig.substr(x.offset,x.length);
+    li.querySelector('.right').textContent=(x.replacements||[]).slice(0,3).map(r=>r.value).join(' / ')||'راجع هذه الكلمة';
+    const cat=x.rule&&x.rule.category&&x.rule.category.id;li.querySelector('.kind').textContent=TYPES[cat]||'لغوي';
+    li.querySelector('p').textContent=x.message||'';$('errs').append(li)});
+  let c=orig;[...errs].reverse().forEach(x=>{const r=x.replacements&&x.replacements[0];if(r)c=c.slice(0,x.offset)+r.value+c.slice(x.offset+x.length)});
+  $('corr').textContent=c;
+  const words=orig.trim().split(/\s+/).length,rate=errs.length*100/words;
+  const n=rate===0?5:rate<3?4:rate<6?3:rate<10?2:1;
+  $('stars').textContent='★'.repeat(n)+'☆'.repeat(5-n);$('stars').title=n+' من 5';
+  $('cheer').textContent=['','بداية طيّبة! صحّح الأخطاء المرقّمة واحدًا واحدًا، ثم أعد التصحيح.','أنت في الطريق الصحيح. انتبه إلى الأخطاء المرقّمة وأعد كتابتها بنفسك.','عمل جيد! بقيت أخطاء قليلة، صحّحها لتصبح كاتبًا متمكّنًا.','أحسنت! نصّك يكاد يخلو من الأخطاء. راجع معايير المهمة في جدول المراجعة.','ممتاز! لم يجد المصحّح أخطاء. تأكّد الآن من تحقيق معايير المهمة.'][n];
+  $('result').hidden=false;$('result').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});
+}
+$('check').onclick=check;
+$('copy').onclick=async()=>{try{await navigator.clipboard.writeText($('corr').textContent);$('copy').textContent='نُسخ ✓'}catch(e){const r=document.createRange();r.selectNodeContents($('corr'));getSelection().removeAllRanges();getSelection().addRange(r);$('copy').textContent='حدّد ثم انسخ'}setTimeout(()=>$('copy').textContent='نسخ',2000)};
+$('useCorr').onclick=()=>{$('text').value=$('corr').textContent;update();$('text').focus()};
+$('clear').onclick=()=>{if($('clear').dataset.sure){$('text').value='';update();$('result').hidden=true;delete $('clear').dataset.sure;$('clear').textContent='ورقة جديدة';renderPicker()}else{$('clear').dataset.sure=1;$('clear').textContent='متأكد؟ اضغط مرة أخرى';setTimeout(()=>{delete $('clear').dataset.sure;$('clear').textContent='ورقة جديدة'},3000)}};
+
+cur=Math.min(TASKS.length-1,Math.max(0,parseInt(store.get('kw-cur')||'0',10)||0));
+load();
+
+</script>
+
+</body>
+</html>
